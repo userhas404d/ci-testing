@@ -22,9 +22,7 @@ jobs:
       before_script:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
-          echo "$PRIOR_VERSION"
           RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
-          echo "$RELEASE_VERSION"
           RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/userhas404d/ci-testing/blob/$RELEASE_VERSION/CHANGELOG.md)"
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
           docker build -t "$IMAGE_NAME" -f Dockerfile .
