@@ -36,7 +36,7 @@ jobs:
       deploy:
         provider: releases
         api_key: 
-          secure: "ax1nIYgkm6/8IXhinyVuYQ7S2z66/fImpgVdqFvNL67Nmlq/u8zO/+2qZccLe3Ujqmks1Mr8YUfk0izGB3ZhtvwLxHr1C1qlwiMPyODUIxzGyGh9die9hfzhHH9qDdXv92PFXpbRPKI00/UywxDtDI2nOW0VzTsGqSKHsGaijdY1f15vQ//idAdO0DoAX2lJYQsnNVKprdmipRnkw+9gkvX4f+bsxGbKq0jCaXLLRmHYMArI0g4yBdfMXDhi7r9T5i3h10EwyaKnD8IVUnq1ZfiWakCWgZTLSBCuRRmmTAOaWP6/2Ruo2QzOmW1+AV9Tb8ICaZstRBhJ5C2uLXR9DyNcJD0lJtCBcbQHzuSnOZgW1+rFcTHW4XeRmQ57ZCU+DJU7/p7Wlp7RakjbiI65+iyzytO5fp4iEcPuRNo9fyrT1LFfv7juZZ/JPuFQu7z5p7rzv18j7yYv8zM65UNLlN7SLVwKasZUeO4PK8OqNP2jJ+pxx1g48w0ddsABtlMA4Cmvf2s4lP9+TsnvriqD0D5iNbrX9lUizV37ADm9Nj2CgSALaHt/fwJ2fesS5+499U6Bt8o2utuNB5j/vNi6Qn+0YOc711Qjfu4j0CHllBxtnUNO8NQYVKyWr+h7EoYRwUmvd/ipvlYZMj3hSQ//edGBJq2LZ6Kwb70iYPGIBI8="        body: $RELEASE_BODY
+          secure: "ax1nIYgkm6/8IXhinyVuYQ7S2z66/fImpgVdqFvNL67Nmlq/u8zO/+2qZccLe3Ujqmks1Mr8YUfk0izGB3ZhtvwLxHr1C1qlwiMPyODUIxzGyGh9die9hfzhHH9qDdXv92PFXpbRPKI00/UywxDtDI2nOW0VzTsGqSKHsGaijdY1f15vQ//idAdO0DoAX2lJYQsnNVKprdmipRnkw+9gkvX4f+bsxGbKq0jCaXLLRmHYMArI0g4yBdfMXDhi7r9T5i3h10EwyaKnD8IVUnq1ZfiWakCWgZTLSBCuRRmmTAOaWP6/2Ruo2QzOmW1+AV9Tb8ICaZstRBhJ5C2uLXR9DyNcJD0lJtCBcbQHzuSnOZgW1+rFcTHW4XeRmQ57ZCU+DJU7/p7Wlp7RakjbiI65+iyzytO5fp4iEcPuRNo9fyrT1LFfv7juZZ/JPuFQu7z5p7rzv18j7yYv8zM65UNLlN7SLVwKasZUeO4PK8OqNP2jJ+pxx1g48w0ddsABtlMA4Cmvf2s4lP9+TsnvriqD0D5iNbrX9lUizV37ADm9Nj2CgSALaHt/fwJ2fesS5+499U6Bt8o2utuNB5j/vNi6Qn+0YOc711Qjfu4j0CHllBxtnUNO8NQYVKyWr+h7EoYRwUmvd/ipvlYZMj3hSQ//edGBJq2LZ6Kwb70iYPGIBI8="
         name: $RELEASE_VERSION
         body: $RELEASE_BODY
         script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
