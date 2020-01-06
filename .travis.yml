@@ -7,7 +7,7 @@ node_js:
 
 env:
   global:
-    - IMAGE_NAME=plus3it/tests-harness
+    - IMAGE_NAME=userhas404d/tests-harness
 
 stages:
   - deploy
@@ -23,7 +23,7 @@ jobs:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
           RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
-          RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/ci-testing/blob/$RELEASE_VERSION/CHANGELOG.md)"
+          RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/userhas404d/ci-testing/blob/$RELEASE_VERSION/CHANGELOG.md)"
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
       script: skip
       before_deploy:
