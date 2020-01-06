@@ -10,8 +10,6 @@ env:
     - IMAGE_NAME=plus3it/tests-harness
 
 stages:
-  - lint
-  - test
   - deploy
 
 services:
@@ -36,8 +34,8 @@ jobs:
           docker tag "$IMAGE_NAME" "${IMAGE_NAME}:$RELEASE_VERSION"
       deploy:
         provider: releases
-        api_key:
-          secure:
+        api_key: 
+          secure: "DRaJ4qIwEY76NR0OREN6gq77Ck3LGcFLRRo4oSGykWVlp0l1MZqSvO1eNTQzE3V/8o3F2sftmmQETPgIKHHO85wMfoFaB99cKV4p+0hniE9GC01G8/vKmN8ApqynSx3x0XWGDd1mgCyiUROFjti4HCxX3c3DcOOny/fhpzFx3x3bTxc+TOXYtTpXwaM0g3xjxAbFjHZu86BaYCVVSi/707FQ/fbNmBAKuBJQHrznRoCWb0Ngq2W1dLJFw6h5ZMbqVy7iLYT8JxsBlxReT9jkngayIb0n+fIG5L0Q3AKfondywBZ0y4va72mIaYVKqhoKFoMUj16IOEoQ7mdxSWuFbeg1TmSLF1gJ9wvrKCwPeTaz3wZrHw29KMxXcIdK0f5IE9mYSIE7YZqeQW5fRu91TeJg83Tco1xPBnoMU7uhMp2ZB/z0yNdQqsR7S2xV4oBTJXBKlOK5FoZtPxsLbFeFmI8B/m5RjrbxfhLYVAcA4H0tjOuvTysRJyYsLPwp15QWXLGtT0P6KwSGAeXLiqIi60wbY3Y12myJkzOFVM7db4pUd3j2KLUiSuzjGXk/DluWlRZWzXVCjdpQjJEUVhqCwzUCk3i9WW9JjMCBq333M+FTeuGT+937IGSaKfVplsblWJ4Okarqe/c3LHuKdMCkqgp0d/R3655UJSkvrcxwrho="
         name: $RELEASE_VERSION
         body: $RELEASE_BODY
         script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
@@ -46,5 +44,5 @@ jobs:
         draft: false
         on:
           branch: master
-          repo: plus3it/tardigrade-ci
+          repo: userhad404d/ci-testing
           condition: '"$PRIOR_VERSION" != "$RELEASE_VERSION"'
