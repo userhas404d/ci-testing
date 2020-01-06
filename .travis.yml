@@ -7,7 +7,7 @@ node_js:
 
 env:
   global:
-    - IMAGE_NAME=userhas404d/tests-harness
+    - IMAGE_NAME=userhas404d/ci-testing
 
 stages:
   - deploy
@@ -22,7 +22,9 @@ jobs:
       before_script:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
+          echo "$PRIOR_VERSION"
           RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
+          echo "$RELEASE_VERSION"
           RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/userhas404d/ci-testing/blob/$RELEASE_VERSION/CHANGELOG.md)"
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
           docker build -t "$IMAGE_NAME" -f Dockerfile .
@@ -33,13 +35,13 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
           docker tag "$IMAGE_NAME" "${IMAGE_NAME}:$RELEASE_VERSION"
+          docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
       deploy:
         provider: releases
         api_key: 
           secure: k6Ep82gA6UsWkRrAdZvHBqGa5F6IJL4AG78Eey34AQDyoJIk1imt3M3yu4jY+me+yWCk2bV2+SgfGOaUVAlFBGHTpkEwprFYhakiRObEl7HZbMVpOK7mna49e2W/FOCKr1WRxO+70SiWt8Uvfs7gKfiAdCB0TiZXYlw+8a3KmCR+YVFrZGBT71IXPml1DfSobRJODYPE1MoNV1cIkHPNK9NLoO/HMSMfF8IC64QADAfIdw/O+6jJzt/Zu3w1SgGPeLyKoX5IFejHefbrdVMwtiWN+GnEh7wPXO3brZIrF4K44onoHrwUcF2PKiX2QDFebfxkm5URcUf7Bdk1XQT1YGjKy5R8BeV9J45ffUpJRNDLM7fxazEMvFkgqeKGKFnE1sDKYGhG81Mw+mrviTHpc6Z0RaJ4NdA7fkCDscLkG3DrhUGN2B06Ade4b4x6O3bAGqMneV7X1eUZXIvanohKyJWRBqO+mx9aFTE3bIATlzeZw4Z1/8IXbFPex8OAnuwdt/ij94qUR4jGxbEDuoDgKgeIihYdSTcCfKCrvX7OAK/GyKXdsKBE5QXkTKbWEC4XQfXUwQ795QUyqNo7lF6s6eeTpW6xvu5ue3rQnU7/mbfI3gfwOqXiA0XF2dw/GJytO07AZUkiEX66LYou1m/A417AdBEL+ovuBFCqK0NpxRA=
         name: $RELEASE_VERSION
         body: $RELEASE_BODY
-        script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
         tag_name: $RELEASE_VERSION
         target_commitish: $TRAVIS_COMMIT
         draft: false
