@@ -44,5 +44,5 @@ jobs:
         draft: false
         on:
           branch: master
-          repo: userhad404d/ci-testing
+          repo: userhas404d/ci-testing
           condition: '"$PRIOR_VERSION" != "$RELEASE_VERSION"'
