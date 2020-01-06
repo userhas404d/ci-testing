@@ -36,7 +36,7 @@ jobs:
       deploy:
         provider: releases
         api_key: 
-          secure: "ax1nIYgkm6/8IXhinyVuYQ7S2z66/fImpgVdqFvNL67Nmlq/u8zO/+2qZccLe3Ujqmks1Mr8YUfk0izGB3ZhtvwLxHr1C1qlwiMPyODUIxzGyGh9die9hfzhHH9qDdXv92PFXpbRPKI00/UywxDtDI2nOW0VzTsGqSKHsGaijdY1f15vQ//idAdO0DoAX2lJYQsnNVKprdmipRnkw+9gkvX4f+bsxGbKq0jCaXLLRmHYMArI0g4yBdfMXDhi7r9T5i3h10EwyaKnD8IVUnq1ZfiWakCWgZTLSBCuRRmmTAOaWP6/2Ruo2QzOmW1+AV9Tb8ICaZstRBhJ5C2uLXR9DyNcJD0lJtCBcbQHzuSnOZgW1+rFcTHW4XeRmQ57ZCU+DJU7/p7Wlp7RakjbiI65+iyzytO5fp4iEcPuRNo9fyrT1LFfv7juZZ/JPuFQu7z5p7rzv18j7yYv8zM65UNLlN7SLVwKasZUeO4PK8OqNP2jJ+pxx1g48w0ddsABtlMA4Cmvf2s4lP9+TsnvriqD0D5iNbrX9lUizV37ADm9Nj2CgSALaHt/fwJ2fesS5+499U6Bt8o2utuNB5j/vNi6Qn+0YOc711Qjfu4j0CHllBxtnUNO8NQYVKyWr+h7EoYRwUmvd/ipvlYZMj3hSQ//edGBJq2LZ6Kwb70iYPGIBI8="
+          secure: "TR1Tb6TZI+Uam4OQqc3Uzw/BvwZ1I9OfQNJBwrkpNBNAj60RKryF+cLmR7m0UTQ5EZVL7H1+Mpt+PJtPm1O4gyI+Ko3rtH8fophxtyaShHi+91Hf76XMAj+Ql9IphHo6O0h0wik4dqnLvCFYmmVbDK54v6uw7sV23j2CeVal0T0i20VVMWvN0oBet8Iqjr8KVtG3W94YlT1vibKFEXjm4YetfgxgcxqawDvgS/v3qm5k0SuP6hR9apuN9zl13Z60C9e4pb/K2UgQxm0xxmJb1pxbQMQzd4owhK+sgiL2G5O2N2mL5H0NpffO/XR8ct9HG4EGYemkq3VZ6kP+ymomPvNYt18jtGin27cCME7Me36HnaPmkFnv+0xacGX1LBVA1CQQyLpJU00aLSTMQB+tkexkOUIvXgiIhvqqBJeMVIs/mVTZzE6nWEEoPL/u/omo0UCRDBK7M7snP4WST+qHlSUFh8Q6b2+MGyBzoBRRCj/4IwE29CxS8ZKiZ5a5aA1Lge2khT3OFfEN0bdSO+29SIaFbiQgHj7VZ/+ZHSPGcHRdVmoXPz980Vc8wAu1weC4p+mVAGlI5k11g1HARS0WBtqlvT19Qx++uxzFgj7WrhoXIGbh+Of233NF9zPktjBgxfNEGb6HtJ1bpbyktWXQygraqZ10P/C2qhWLK8exowo="
         name: $RELEASE_VERSION
         body: $RELEASE_BODY
         script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
