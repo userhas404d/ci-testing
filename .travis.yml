@@ -1,0 +1,50 @@
+dist: xenial
+
+language: node_js
+
+node_js:
+  - "8"
+
+env:
+  global:
+    - IMAGE_NAME=plus3it/tests-harness
+
+stages:
+  - lint
+  - test
+  - deploy
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: deploy
+      if: branch = master AND type = push AND repo = userhas404d/ci-testing
+      before_script:
+        - |
+          PRIOR_VERSION=$(git describe --abbrev=0 --tags)
+          RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
+          RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/ci-testing/blob/$RELEASE_VERSION/CHANGELOG.md)"
+          export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
+      script: skip
+      before_deploy:
+        - |
+          (set -x; git tag -a $RELEASE_VERSION -m $RELEASE_VERSION)
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+          docker tag "$IMAGE_NAME" "${IMAGE_NAME}:$RELEASE_VERSION"
+      deploy:
+        provider: releases
+        api_key:
+          secure:
+        name: $RELEASE_VERSION
+        body: $RELEASE_BODY
+        script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${version}"
+        tag_name: $RELEASE_VERSION
+        target_commitish: $TRAVIS_COMMIT
+        draft: false
+        on:
+          branch: master
+          repo: plus3it/tardigrade-ci
+          condition: '"$PRIOR_VERSION" != "$RELEASE_VERSION"'
