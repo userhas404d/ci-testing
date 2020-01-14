@@ -15,6 +15,7 @@ stages:
 services:
   - docker
 
+  
 jobs:
   include:
     - stage: deploy
