@@ -15,11 +15,10 @@ stages:
 services:
   - docker
 
-  
 jobs:
   include:
     - stage: deploy
-      if: branch = master AND repo = userhas404d/ci-testing
+      if: branch = master AND type = push AND repo = userhas404d/ci-testing
       before_script:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
