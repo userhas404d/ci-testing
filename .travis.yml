@@ -10,6 +10,8 @@ env:
     - IMAGE_NAME=maximumoverdrive/ci-testing
 
 stages:
+  - lint
+  - test
   - deploy
 
 services:
@@ -17,6 +19,30 @@ services:
 
 jobs:
   include:
+    - stage: lint
+      name: EditorConfig Syntax Verification
+      install:
+        - npm install -g eclint
+        - eclint --version
+      script: eclint check
+    - stage: lint
+      name: Shell Script Syntax Verification
+      script: make sh/lint
+    - stage: lint
+      name: JSON Lint/Format Verification
+      script: make json/lint
+    - stage: lint
+      name: Terraform Lint/Format Verification
+      install:
+        - make terraform/install
+        - make terraform-docs/install
+      script:
+        - make terraform/lint
+        - make docs/lint
+    - stage: test
+      name: Makefile unit tests
+      script:
+        - bash bin/conditional-makefile-unit-tests.sh
     - stage: deploy
       if: branch = master AND type = push AND repo = userhas404d/ci-testing
       before_script:
@@ -36,8 +62,8 @@ jobs:
           docker push "$IMAGE_NAME:latest" && docker push "$IMAGE_NAME:$RELEASE_VERSION"
       deploy:
         provider: releases
-        api_key: 
-          secure: k6Ep82gA6UsWkRrAdZvHBqGa5F6IJL4AG78Eey34AQDyoJIk1imt3M3yu4jY+me+yWCk2bV2+SgfGOaUVAlFBGHTpkEwprFYhakiRObEl7HZbMVpOK7mna49e2W/FOCKr1WRxO+70SiWt8Uvfs7gKfiAdCB0TiZXYlw+8a3KmCR+YVFrZGBT71IXPml1DfSobRJODYPE1MoNV1cIkHPNK9NLoO/HMSMfF8IC64QADAfIdw/O+6jJzt/Zu3w1SgGPeLyKoX5IFejHefbrdVMwtiWN+GnEh7wPXO3brZIrF4K44onoHrwUcF2PKiX2QDFebfxkm5URcUf7Bdk1XQT1YGjKy5R8BeV9J45ffUpJRNDLM7fxazEMvFkgqeKGKFnE1sDKYGhG81Mw+mrviTHpc6Z0RaJ4NdA7fkCDscLkG3DrhUGN2B06Ade4b4x6O3bAGqMneV7X1eUZXIvanohKyJWRBqO+mx9aFTE3bIATlzeZw4Z1/8IXbFPex8OAnuwdt/ij94qUR4jGxbEDuoDgKgeIihYdSTcCfKCrvX7OAK/GyKXdsKBE5QXkTKbWEC4XQfXUwQ795QUyqNo7lF6s6eeTpW6xvu5ue3rQnU7/mbfI3gfwOqXiA0XF2dw/GJytO07AZUkiEX66LYou1m/A417AdBEL+ovuBFCqK0NpxRA=
+        api_key:
+          secure:
         name: $RELEASE_VERSION
         body: $RELEASE_BODY
         tag_name: $RELEASE_VERSION
