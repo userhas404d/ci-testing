@@ -29,7 +29,6 @@ jobs:
       script: skip
       before_deploy:
         - |
-          (set -x; git tag -a $RELEASE_VERSION -m $RELEASE_VERSION)
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker tag "$IMAGE_NAME" "$IMAGE_NAME:latest"
           docker tag "$IMAGE_NAME" "$IMAGE_NAME:$RELEASE_VERSION"
