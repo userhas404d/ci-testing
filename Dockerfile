@@ -10,3 +10,4 @@ COPY . /ci-harness
 RUN cd /ci-harness && make install && make bats/test
 ENV PATH="/root/bin:${PATH}"
 WORKDIR /ci-harness
+ENTRYPOINT ["make"]
