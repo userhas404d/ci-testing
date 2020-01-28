@@ -171,14 +171,14 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+sh/%: FIND_SH ?= find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
 	$(FIND_SH) | $(XARGS) shellcheck {}
 	@ echo "[$@]: Shell scripts PASSED lint test!"
 
-json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
+json/%: FIND_JSON ?= find . $(FIND_EXCLUDES) -name '*.json' -type f
 json/validate:
 	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Found invalid JSON file: "{}" "; exit 1)'
 	@ echo "[$@]: JSON files PASSED validation test!"
