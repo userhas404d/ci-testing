@@ -1,7 +1,6 @@
 #!/usr/bin/env bats
 
-DIR="$(pwd)"
-TEST_DIR="$DIR/json_lint_success"
+TEST_DIR="$(pwd)/json_lint_success"
 
 function setup() {
 mkdir -p "$TEST_DIR/top/nested"
@@ -15,7 +14,7 @@ EOF
 @test "json/lint: nested file success" {
   run make json/lint
   [ "$status" -eq 0 ]
-  [ "${lines[2]}" = "[json/lint]: JSON files PASSED lint test!" ]
+  [[ "$output" == *"[json/lint]: JSON files PASSED lint test!"* ]]
 }
 
 function teardown() {
