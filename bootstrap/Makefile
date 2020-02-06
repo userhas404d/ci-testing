@@ -58,10 +58,11 @@ docker/run: docker/build
 	-v "$(PROJECT_ROOT):/ci-harness/$(PROJECT_NAME)" \
 	-v "$(HOME)/.aws:/.aws" \
 	-e TERRAFORM_TEST_DIR=$(PROJECT_NAME)/tests \
+	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME) \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	-e AWS_PROFILE=$(AWS_PROFILE) \
 	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
-	-e INCLUDE=/ci-harness/Makefile \
+	-e INCLUDE=/ci-harness/$(PROJECT_NAME)/Makefile \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment

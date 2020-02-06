@@ -122,6 +122,15 @@ install/pip/%: | guard/env/PYPI_PKG_NAME
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+yamllint/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+cfn-lint/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+yq/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
 node/install: NODE_VERSION ?= 10.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
 node/install:
@@ -142,24 +151,40 @@ install/npm/%: | guard/program/npm
 eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
 
+yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
+## Lints YAML files
+yaml/lint: | guard/program/yamllint
+yaml/lint: YAMLLINT_CONFIG ?= .yamllint.yml
+yaml/lint:
+	@ echo "[$@]: Running yamllint..."
+	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
+	@ echo "[$@]: Project PASSED yamllint test!"
+
+cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
+## Lints CloudFormation files
+cfn/lint: | guard/program/cfn-lint
+	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
+
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
-eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
+eclint/lint: PROJECT_ROOT ?= .
+eclint/lint: ECLINT_PREFIX ?= git ls-files -z $(PROJECT_ROOT) | xargs -0
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	$(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
+python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
 ## Lints Python files
 python/lint: | guard/program/black
 	@ echo "[$@]: Linting Python files..."
-	black --check .
+	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
 	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
 python/format: | guard/program/black
 	@ echo "[$@]: Formatting Python files..."
-	black .
+	$(FIND_PYTHON) | $(XARGS) black $$(dirname {})
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
@@ -174,14 +199,14 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-sh/%: FIND_SH ?= find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
 	$(FIND_SH) | $(XARGS) shellcheck {}
 	@ echo "[$@]: Shell scripts PASSED lint test!"
 
-json/%: FIND_JSON ?= find . $(FIND_EXCLUDES) -name '*.json' -type f
+json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
 json/validate:
 	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Found invalid JSON file: "{}" "; exit 1)'
 	@ echo "[$@]: JSON files PASSED validation test!"
@@ -257,6 +282,6 @@ bats/test: | guard/program/bats
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint
