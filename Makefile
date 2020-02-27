@@ -199,7 +199,7 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
