@@ -167,6 +167,7 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
+eclint/lint: PROJECT_ROOT ?= .
 eclint/lint: PROJECT_DIR ?= $(PROJECT_ROOT)/$(PROJECT_NAME)
 eclint/lint: ECLINT_PREFIX ?= cd $(PROJECT_DIR) && git ls-files -z | xargs -0
 eclint/lint:
