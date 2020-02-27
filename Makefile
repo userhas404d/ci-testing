@@ -167,6 +167,7 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
+eclint/lint: PROJECT_ROOT ?= .
 eclint/lint: PROJECT_DIR ?= $(PROJECT_ROOT)/$(PROJECT_NAME)
 eclint/lint: ECLINT_PREFIX ?= cd $(PROJECT_DIR) && git ls-files -z | xargs -0
 eclint/lint:
@@ -199,7 +200,7 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
